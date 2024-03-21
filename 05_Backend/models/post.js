@@ -5,11 +5,15 @@ const postSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
+        minlength: 5,
+        maxlength: 20,
       },
       category: {
         type: String,
         trim: true,
         required: true,
+        minlength: 5,
+        maxlength: 20,
       },
       userId: {
         type: mongoose.Schema.Types.ObjectId,
