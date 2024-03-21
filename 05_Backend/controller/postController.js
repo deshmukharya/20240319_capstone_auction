@@ -5,42 +5,40 @@ const { verifyToken } = require("../middleware/auth");
 const createPost = async (req, res) => {
     try {
         // Validate request body
-        const { postId, comment } = req.body;
-        const userId = req.query.userId;
-
-        if (!postId || !userId || !comment) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
+        const { name, category, image, price } = req.body;
+        if (!name || !category || !image || !price) {
+          return res.status(400).json({ success: false, message: "Missing required fields" });
         }
-
+    
         // Verify token from request headers
         const token = req.headers.authorization;
         if (!token) {
-            return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
+          return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
         }
-
+    
         const extractedToken = token.replace("Bearer ", "");
         const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
-
-        // Check if the userId from the token matches the provided userId
-        if (decoded.userId !== userId) {
-            return res.status(401).json({ success: false, message: "Unauthorized: Token userId does not match provided userId" });
-        }
-
-        // Create a new Comment document with the provided data
-        const newComment = new Comment({
-            postId,
-            userId,
-            comment,
+    
+        // Extract userId from the decoded token
+        const userId = decoded.userId;
+    
+        // Create a new Post document with the provided data
+        const newPost = new Post({
+          name,
+          category,
+          userId,
+          image,
+          price,
         });
-
-        // Save the comment
-        const savedComment = await newComment.save();
-
-        res.status(201).json({ success: true, message: "Comment added successfully", comment: savedComment });
-    } catch (error) {
+    
+        // Save the post
+        const savedPost = await newPost.save();
+    
+        res.status(201).json({ success: true, message: "Post created successfully", post: savedPost });
+      } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
-    }
+      }
     }
 
 
@@ -136,35 +134,35 @@ const createPost = async (req, res) => {
         }
       };
 
-      const deletePost = async (req, res) => {
-        try {
-            // Extract token from request headers
-            const token = req.headers.authorization;
-            if (!token) {
-                return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
-            }
-            
-            // Verify and decode the token
-            const extractedToken = token.replace('Bearer ', '');
-            const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
-    
-            // Extract postId from query parameters
-            const postId = req.query.postId;
-    
-            // Find the post by its ID and delete it
-            const deletedPost = await Post.findByIdAndDelete(postId);
-    
-            // If the post is not found, return 404 Not Found
-            if (!deletedPost) {
-                return res.status(404).json({ success: false, message: 'Post not found' });
-            }
-    
-            // Return success message upon successful deletion
-            res.json({ success: true, message: 'Post deleted successfully', deletedPost });
-        } catch (error) {
-            // Return 500 Internal Server Error if any error occurs
-            console.error(error);
-            res.status(500).json({ success: false, message: 'Internal Server Error' });
+    const deletePost = async (req, res) => {
+    try {
+        // Extract token from request headers
+        const token = req.headers.authorization;
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
         }
-    };
+        
+        // Verify and decode the token
+        const extractedToken = token.replace('Bearer ', '');
+        const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
+
+        // Extract postId from query parameters
+        const postId = req.query.postId;
+
+        // Find the post by its ID and delete it
+        const deletedPost = await Post.findByIdAndDelete(postId);
+
+        // If the post is not found, return 404 Not Found
+        if (!deletedPost) {
+            return res.status(404).json({ success: false, message: 'Post not found' });
+        }
+
+        // Return success message upon successful deletion
+        res.json({ success: true, message: 'Post deleted successfully', deletedPost });
+    } catch (error) {
+        // Return 500 Internal Server Error if any error occurs
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
 module.exports = { createPost,getAllPosts,getPostById,addLike,getLikes,deletePost };
