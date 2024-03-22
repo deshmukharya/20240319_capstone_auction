@@ -29,7 +29,7 @@ const Bid = require("./models/bid");
 app.use("/users", userRouter);
 app.use("/post", postRouter);
 app.use("/comment",commentRouter);
-app.use("/bet",betRouter);
+app.use("/bid",betRouter);
 // Get the default connection
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

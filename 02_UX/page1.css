@@ -140,6 +140,10 @@ body {
     border-radius: 5px;
 }
 
+.images{
+    width:500px;
+    height:350px;
+}
 .post:nth-child(odd) {
     grid-column: 1; 
     /* Left posts */

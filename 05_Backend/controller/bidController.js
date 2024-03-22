@@ -1,4 +1,4 @@
-const Bet = require("../models/bid");
+const Bid = require("../models/bid");
 const Post = require("../models/post");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
@@ -26,16 +26,16 @@ const postBid = async (req, res) => {
   
 
       // Create a new Bet document with the provided data
-      const newBet = new Bet({
+      const newBid = new Bid({
         postId,
         userId,
         amount,
       });
   
-      // Save the bet
-      const savedBet = await newBet.save();
+      // Save the bid
+      const savedBid = await newBid.save();
   
-      res.status(201).json({ success: true, message: "Bet posted successfully", bet: savedBet });
+      res.status(201).json({ success: true, message: "Bid posted successfully", bid: savedBid });
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -53,15 +53,14 @@ const getBidsByPostId = async (req, res) => {
         return res.status(400).json({ success: false, message: "Post ID is required" });
       }
   
-      // Find all bets associated with the given post ID
-      const bets = await Bet.find({ postId });
+      // Find all bids associated with the given post ID
+      const bids = await bids.find({ postId });
   
-      res.status(200).json({ success: true, message: "Bid retrieved successfully", bid });
+      res.status(200).json({ success: true, message: "Bid retrieved successfully", bids });
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Internal Server Error" });
     }
   };
   
-
 module.exports = { postBid,getBidsByPostId };

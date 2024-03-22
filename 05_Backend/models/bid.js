@@ -16,6 +16,7 @@ const bidSchema = new mongoose.Schema({
         required: true,
         min: 500,
       },
+      
     }, {
       timestamps: true // Automatically add createdAt and updatedAt fields
     });
