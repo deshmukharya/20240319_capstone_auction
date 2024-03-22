@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const betSchema = new mongoose.Schema({
+const bidSchema = new mongoose.Schema({
     postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post",
@@ -14,14 +14,14 @@ const betSchema = new mongoose.Schema({
       amount: {
         type: Number,
         required: true,
-        min: 0,
+        min: 500,
       },
     }, {
       timestamps: true // Automatically add createdAt and updatedAt fields
     });
 
 // Create the Bet model
-const Bet = mongoose.model("Bet", betSchema);
+const Bid = mongoose.model("Bid", bidSchema);
 
 // Export the Bet model
-module.exports = Bet;
+module.exports = Bid;

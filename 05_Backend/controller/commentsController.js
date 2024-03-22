@@ -14,38 +14,27 @@ const postComment = async (req, res) => {
         if (!postId || !userId || !comment) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
-
         // Verify token from request headers
         const token = req.headers.authorization;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
         }
-
         const extractedToken = token.replace("Bearer ", "");
         const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
-
-        // Check if the userId from the token matches the provided userId
-        
-
         // Create a new Comment document with the provided data
         const newComment = new Comment({
             postId,
             userId,
             comment,
         });
-
         // Save the comment
         const savedComment = await newComment.save();
-
         res.status(201).json({ success: true, message: "Comment added successfully", comment: savedComment });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
-
-
-
 
   const getCommentsByPostId = async (req, res) => {
     try {

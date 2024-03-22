@@ -15,7 +15,7 @@ const validateCategory = (category) => {
 // Validation function for image
 const validateImage = (image) => {
     if (!image || image.trim().length === 0) {
-        throw new Error("Image URL is required.");
+        throw new Error("Image is required.");
     }
 };
 

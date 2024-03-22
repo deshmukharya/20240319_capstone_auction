@@ -29,6 +29,11 @@ const postSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
+      duration: {
+        type: Number,
+        required: true,
+        min: 1, // Minimum duration of 1 day
+    },
       likes: {
         type: Number,
         default: 0,

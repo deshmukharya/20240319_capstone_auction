@@ -1,0 +1,191 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2; /* Background color for the body */
+}
+
+.header_section {
+    background-color: black;
+    color: white;
+    padding: 20px 0;
+}
+
+.container1 {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.header_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color:  #30ae69; /* Green color for the site name */
+}
+
+.site_name {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation ul li {
+    display: inline;
+}
+
+.navigation ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+ /* Basic Styles */
+ body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Header Styles */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.search-bar {
+    flex-grow: 1;
+    padding: 8px;
+    width: 100%; /* Adjust the width as needed */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 100px;
+}
+
+.create-post-btn {
+    padding: 4px 10px;
+    background-color: #30ae69;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width:100px;
+    cursor: pointer;
+}
+/* Posts Styles */
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.posts {
+    display: grid;
+    grid-gap: 20px; /* Change display to grid */
+    grid-template-columns: repeat(2, 1fr); /* Create two columns with equal width */
+    gap: 50px; /* Add gap between the columns */
+    justify-content: center; /* Center the grid */
+    margin-bottom: 20px;
+}
+
+.post {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.post-details {
+    margin-bottom: 10px;
+}
+
+.post-details h2 {
+    margin-top: 0;
+}
+
+.comment-section {
+    display: none;
+    margin-top: 10px;
+}
+
+.comment-section textarea {
+    width: 100%;
+    padding: 8px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.post:nth-child(odd) {
+    grid-column: 1; 
+    /* Left posts */
+    margin-left: 90px;
+    width:500px;
+}
+
+.post:nth-child(even) {
+    grid-column: 2; /* Right posts */
+    margin-right: 260x;
+    width:500px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px; /* Add space between post content and buttons */
+}
+
+.post-actions button {
+    padding: 10px 20px; /* Adjust padding as needed */
+    background-color: #007bff; /* Blue color for buttons */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px; /* Adjust height as needed */
+    width: 100px; /* Adjust width as needed */
+}
+
+.post-actions button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+
+/* Responsive Media Queries */
+@media only screen and (min-width: 768px) {
+    .container {
+        padding: 20px 40px; /* Increase padding for larger screens */
+    }
+
+    .posts {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
+    }
+
+    .post {
+        width: calc(50% - 20px); /* Adjust post width for larger screens */
+    }
+}

@@ -1,10 +1,10 @@
-const Bet = require("../models/bet");
+const Bet = require("../models/bid");
 const Post = require("../models/post");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { verifyToken } = require("../middleware/auth");
 
-const postBet = async (req, res) => {
+const postBid = async (req, res) => {
     try {
       // Extract post ID from query parameters
       const postId = req.query.postId;
@@ -43,7 +43,7 @@ const postBet = async (req, res) => {
   };
   
 
-const getBetsByPostId = async (req, res) => {
+const getBidsByPostId = async (req, res) => {
     try {
       // Extract post ID from query parameters
       const postId = req.query.postId;
@@ -56,7 +56,7 @@ const getBetsByPostId = async (req, res) => {
       // Find all bets associated with the given post ID
       const bets = await Bet.find({ postId });
   
-      res.status(200).json({ success: true, message: "Bets retrieved successfully", bets });
+      res.status(200).json({ success: true, message: "Bid retrieved successfully", bid });
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -64,4 +64,4 @@ const getBetsByPostId = async (req, res) => {
   };
   
 
-module.exports = { postBet,getBetsByPostId };
+module.exports = { postBid,getBidsByPostId };

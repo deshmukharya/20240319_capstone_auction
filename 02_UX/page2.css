@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2; /* Background color for the body */
+}
+
+.header_section {
+    background-color: black;
+    color: white;
+    padding: 20px 0;
+}
+
+.container1 {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.header_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color:  #30ae69; /* Green color for the site name */
+}
+
+.site_name {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation ul li {
+    display: inline;
+}
+
+.navigation ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+/* Add this to your existing CSS file or create a new one */
+.product-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.product-image {
+    width: 200px; /* Set the desired width */
+    height: auto; /* Let the browser calculate the height to maintain aspect ratio */
+}
+.stopwatch {
+    margin-top: 10px;
+    color: green;
+}
+
+.blue-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #3498db; /* Blue border */
+}
+
+.blue-table th,
+.blue-table td {
+    padding: 8px;
+    border: 1px solid #3498db; /* Blue border */
+}
+
+.blue-table th {
+    background-color: #3498db; /* Blue background */
+    color: white;
+}
+
+h2 {
+    color: #333;
+}
+
+.blue-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #010b12; /* Blue border */
+}
+
+.blue-table th,
+.blue-table td {
+    padding: 8px;
+    border: 1px solid #00060a; /* Blue border */
+}
+
+.blue-table th {
+    background-color: #01090e; /* Blue background */
+    color: white;
+}
