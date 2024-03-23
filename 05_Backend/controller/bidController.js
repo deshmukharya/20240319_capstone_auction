@@ -42,25 +42,28 @@ const postBid = async (req, res) => {
     }
   };
   
-
-const getBidsByPostId = async (req, res) => {
+  const getBidsByPostId = async (req, res) => {
     try {
-      // Extract post ID from query parameters
-      const postId = req.query.postId;
-  
-      // Validate post ID
-      if (!postId) {
-        return res.status(400).json({ success: false, message: "Post ID is required" });
-      }
-  
-      // Find all bids associated with the given post ID
-      const bids = await bids.find({ postId });
-  
-      res.status(200).json({ success: true, message: "Bid retrieved successfully", bids });
+        // Extract post ID from query parameters
+        const postId = req.query.postId;
+
+        // Validate post ID
+        if (!postId) {
+            return res.status(400).json({ success: false, message: "Post ID is required" });
+        }
+
+        // Find all bids associated with the given post ID using the Bid model
+        const bids = await Bid.find({ postId });
+
+        // Calculate the total amount of bids for the post
+        const totalAmount = bids.reduce((acc, curr) => acc + curr.amount, 0);
+
+        res.status(200).json({ success: true, message: "Bids retrieved successfully", totalAmount });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: "Internal Server Error" });
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-  };
+};
+
   
 module.exports = { postBid,getBidsByPostId };

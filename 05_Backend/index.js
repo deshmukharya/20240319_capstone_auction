@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // Create an Express application
 const app = express();
+const cors = require('cors');
+
 // Connect to the database
 require("./databse/connection");
 // Load environment variables from .env file
@@ -14,7 +16,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware for parsing JSON bodies
 app.use(bodyParser.json());
-
 const userRouter=require("./router/userRouter");
 const postRouter=require("./router/postRouter");
 const commentRouter =require("./router/commentRouter");
@@ -34,6 +35,10 @@ app.use("/bid",betRouter);
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
+  app.use(cors({
+    origin: 'http://localhost:4200',
+    credentials: true, // optional, if you need to send cookies
+  }));
   
   // Export the Express application
   module.exports = app;

@@ -1,0 +1,32 @@
+<form (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="postData.name" required>
+    </div>
+    <div>
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" [(ngModel)]="postData.category" required>
+    </div>
+    <div>
+      <label for="image">Image URL:</label>
+      <input type="text" id="image" name="image" [(ngModel)]="postData.image" required>
+    </div>
+    <div>
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price" [(ngModel)]="postData.price" required>
+    </div>
+    <div>
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" [(ngModel)]="postData.startDate" required>
+    </div>
+    <div>
+      <label for="startTime">Start Time:</label>
+      <input type="time" id="startTime" name="startTime" [(ngModel)]="postData.startTime" required>
+    </div>
+    <div>
+      <label for="duration">Duration:</label>
+      <input type="number" id="duration" name="duration" [(ngModel)]="postData.duration" required>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  

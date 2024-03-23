@@ -5,30 +5,22 @@ const { verifyToken } = require("../middleware/auth");
 const createPost = async (req, res) => {
     try {
         // Validate request body
-        const { name, category, image, price } = req.body;
-        if (!name || !category || !image || !price) {
+        const { name, category, image, price, startDate, startTime, duration } = req.body;
+        if (!name || !category || !image || !price || !startDate || !startTime || !duration) {
           return res.status(400).json({ success: false, message: "Missing required fields" });
         }
     
         // Verify token from request headers
-        const token = req.headers.authorization;
-        if (!token) {
-          return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
-        }
-    
-        const extractedToken = token.replace("Bearer ", "");
-        const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
-    
-        // Extract userId from the decoded token
-        const userId = decoded.userId;
     
         // Create a new Post document with the provided data
         const newPost = new Post({
           name,
           category,
-          userId,
           image,
           price,
+          startDate,
+          startTime,
+          duration
         });
     
         // Save the post
@@ -40,7 +32,6 @@ const createPost = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
       }
     }
-
 
     const getAllPosts = async (req, res) => {
         try {
@@ -75,9 +66,7 @@ const createPost = async (req, res) => {
           console.error(error);
           res.status(500).json({ success: false, message: "Internal Server Error" });
         }
-      };
-
-
+      }; 
       const addLike = async (req, res) => {
         try {
           // Extract post ID from query parameters
@@ -141,7 +130,6 @@ const createPost = async (req, res) => {
         if (!token) {
             return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
         }
-        
         // Verify and decode the token
         const extractedToken = token.replace('Bearer ', '');
         const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
@@ -165,4 +153,12 @@ const createPost = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
+
+
+
+
+// Save file to server storage
+
+
 module.exports = { createPost,getAllPosts,getPostById,addLike,getLikes,deletePost };
+

@@ -17,8 +17,7 @@ const postSchema = new mongoose.Schema({
       },
       userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    
+        ref: "User",   
       },
       image: {
         type: String,
@@ -29,9 +28,17 @@ const postSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
-      duration: {
-        type: Number,
-        min: 1, // Minimum duration of 1 day
+      startDate: {
+        type: String,
+        required: true,
+    },
+    startTime: {
+        type: String,
+        required: true,
+    },
+    duration :{
+        type:Number,
+        required:true
     },
       likes: {
         type: Number,

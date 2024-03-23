@@ -7,7 +7,6 @@ const { verifyToken } = require("../middleware/auth");
 
 const postComment = async (req, res) => {
     try {
-        // Validate request body
         const { postId, comment } = req.body;
         const userId = req.query.userId;
 
@@ -35,20 +34,14 @@ const postComment = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
-
   const getCommentsByPostId = async (req, res) => {
+    const postId = req.query.postId;
     try {
-      // Extract post ID from query parameters
-      const postId = req.query.postId;
-  
-      // Validate post ID
       if (!postId) {
         return res.status(400).json({ success: false, message: "Post ID is required" });
       }
-  
       // Find all comments associated with the given post ID
       const comments = await Comment.find({ postId });
-  
       res.status(200).json({ success: true, message: "Comments retrieved successfully", comments });
     } catch (error) {
       console.error(error);
