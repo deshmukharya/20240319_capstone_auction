@@ -5,8 +5,8 @@ const { verifyToken } = require("../middleware/auth");
 const createPost = async (req, res) => {
     try {
         // Validate request body
-        const { name, category, image, price, startDate, startTime, duration } = req.body;
-        if (!name || !category || !image || !price || !startDate || !startTime || !duration) {
+        const { name, category, image, price, startDateTime, duration } = req.body;
+        if (!name || !category || !image || !price || !startDateTime|| !duration) {
           return res.status(400).json({ success: false, message: "Missing required fields" });
         }
     
@@ -18,8 +18,7 @@ const createPost = async (req, res) => {
           category,
           image,
           price,
-          startDate,
-          startTime,
+          startDateTime,
           duration
         });
     

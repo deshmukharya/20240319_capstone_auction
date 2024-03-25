@@ -11,32 +11,51 @@ export class AddpostComponent {
     category: '',
     image: '',
     price: 0,
-    startDate: '',
-    startTime: '',
+    startDateTime: '', // Initialize with an empty string
     duration: 0
   };
 
   constructor(private http: HttpClient) {}
 
   onSubmit() {
+    // Format the date before submitting
+    this.postData.startDateTime = this.formatDateTime(this.postData.startDateTime);
+
+    // Make HTTP post request to submit the data
     this.http.post<any>('http://localhost:3001/post/createPost', this.postData)
       .subscribe(
-        res => {
-          console.log(res);
+        response => {
+          console.log('Post created successfully:', response);
           // Optionally reset the form data after successful submission
-          this.postData = {
-            name: '',
-            category: '',
-            image: '',
-            price: 0,
-            startDate: '',
-            startTime: '',
-            duration: 0
-          };
+          this.resetForm();
         },
-        err => {
-          console.error(err);
+        error => {
+          console.error('Error creating post:', error);
         }
       );
+  }
+
+  // Function to format date to match "yyyy-MM-ddThh:mm" format
+  formatDateTime(dateTime: string): string {
+    const date = new Date(dateTime);
+    const formattedDateTime = `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}T${this.pad(date.getHours())}:${this.pad(date.getMinutes())}`;
+    return formattedDateTime;
+  }
+
+  // Function to pad single digits with a leading zero
+  pad(n: number): string {
+    return n < 10 ? '0' + n : n.toString();
+  }
+
+  // Function to reset the form data
+  resetForm() {
+    this.postData = {
+      name: '',
+      category: '',
+      image: '',
+      price: 0,
+      startDateTime: '', // Initialize with an empty string
+      duration: 0
+    };
   }
 }

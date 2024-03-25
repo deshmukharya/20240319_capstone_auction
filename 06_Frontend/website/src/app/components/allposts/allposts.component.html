@@ -1,35 +1,32 @@
-<body>
-    <div class="container">       
-       <!-- Header -->
-        <header class="header">
-            <input type="text" class="search-bar" placeholder="Search...">
-            <button class="create-post-btn">Create Post</button>
-        </header> 
-        <!-- Posts -->
-        <div class="posts">
-            <div class="post" *ngFor="let post of posts">
-              <div class="post-details">
-                <h2>{{ post.title }}</h2>
-                <h3>{{ post.price }}</h3>
-                <p>Author: {{ post.author }}</p>
-              </div>
-              <div class="images">
+<app-navbar></app-navbar>
+<div class="container">
+    <header class="header">
+        <input type="text" class="search-bar" placeholder="Search...">
+        <button class="create-post-btn">Create Post</button>
+    </header>
+    <div class="posts">
+        <div class="post" *ngFor="let post of posts">
+            <div class="post-details">
+                <h2>{{ post.name }}</h2>
+                <h3>{{ post.category }}</h3>
+                <p> {{ post.price }}</p>
+            </div>
+            <div class="images">
                 <img [src]="post.image" [alt]="post.title" class="post-image" [style.height]="post.height">
-              </div>
-              <div class="post-actions">
-                <button class="like-btn">{{post.likes}}</button>
-                <button class="comment-btn">{{post.comments}}</button>
-                <button class="bet-btn">{{post.bid}}</button>
-              </div>
-              <div class="comment-section">
+            </div>
+            <div class="post-actions">
+                <a href="#" class="like-btn">{{post.likes}}</a>
+                <a href="#" class="comment-btn">{{post.comments}}</a>
+
+                <a [routerLink]="['/bid']" [queryParams]="{_id:post._id}" class="bet-btn">Bidding </a>
+            </div>
+            <div class="comment-section">
                 <textarea placeholder="Write your comment here..."></textarea>
                 <button class="post-comment-btn">Post Comment</button>
                 <div class="previous-comments">
-                  <!-- Previous comments will appear here -->
+                    <!-- Previous comments will appear here -->
                 </div>
-              </div>
             </div>
-          </div>
-            
-    </div>  
-</body>
+        </div>
+    </div>
+</div>

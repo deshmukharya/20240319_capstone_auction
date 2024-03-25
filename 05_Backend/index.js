@@ -4,7 +4,10 @@ const bodyParser = require("body-parser");
 // Create an Express application
 const app = express();
 const cors = require('cors');
-
+app.use(cors({
+   origin: "*" , 
+    credentials: true, // optional, if you need to send cookies
+  }));
 // Connect to the database
 require("./databse/connection");
 // Load environment variables from .env file
@@ -35,10 +38,7 @@ app.use("/bid",betRouter);
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
-  app.use(cors({
-    origin: 'http://localhost:4200',
-    credentials: true, // optional, if you need to send cookies
-  }));
+
   
   // Export the Express application
   module.exports = app;

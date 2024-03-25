@@ -1,32 +1,33 @@
+<app-navbar></app-navbar>
+<div class="main">
+    <div class="wrapper">
+        <div class="title">Create Post</div>
 <form (ngSubmit)="onSubmit()">
-    <div>
+    <div class="field">
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" [(ngModel)]="postData.name" required>
     </div>
-    <div>
+    <div class="field">
       <label for="category">Category:</label>
       <input type="text" id="category" name="category" [(ngModel)]="postData.category" required>
     </div>
-    <div>
+    <div class="field">
       <label for="image">Image URL:</label>
       <input type="text" id="image" name="image" [(ngModel)]="postData.image" required>
     </div>
-    <div>
+    <div class="field">
       <label for="price">Price:</label>
       <input type="number" id="price" name="price" [(ngModel)]="postData.price" required>
     </div>
-    <div>
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" name="startDate" [(ngModel)]="postData.startDate" required>
-    </div>
-    <div>
-      <label for="startTime">Start Time:</label>
-      <input type="time" id="startTime" name="startTime" [(ngModel)]="postData.startTime" required>
-    </div>
-    <div>
-      <label for="duration">Duration:</label>
+    <div class="field">
+        <label for="startDateTime">Start Date and Time:</label>
+        <input type="datetime-local" id="startDateTime" name="startDateTime" [(ngModel)]="postData.startDateTime" required>
+      </div>
+    <div class="field">
+      <label for="duration" class="field">Duration:</label>
       <input type="number" id="duration" name="duration" [(ngModel)]="postData.duration" required>
     </div>
     <button type="submit">Submit</button>
   </form>
-  
+    </div>
+  </div>

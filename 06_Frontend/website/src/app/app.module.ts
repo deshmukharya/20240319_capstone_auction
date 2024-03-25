@@ -10,6 +10,12 @@ import { LandingpageComponent } from './pages/landingpage/landingpage.component'
 import { AllpostsComponent } from './components/allposts/allposts.component';
 import { AddpostComponent } from './components/addpost/addpost.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SignupComponent } from './components/signup/signup.component';
+import { LoginComponent } from './components/login/login.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BiddingComponent } from './components/bidding/bidding.component';
+
 
 
 @NgModule({
@@ -20,17 +26,31 @@ import { HttpClientModule } from '@angular/common/http';
     FooterComponent,
     LandingpageComponent,
     AllpostsComponent,
-    AddpostComponent
+    AddpostComponent,
+    SignupComponent,
+    LoginComponent,
+    BiddingComponent,
+   
+  
+  
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+   
   ],
   providers: [
-    provideClientHydration()
+   
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+
+  
+ }

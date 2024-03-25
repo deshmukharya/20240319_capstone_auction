@@ -165,15 +165,15 @@ body {
     margin-bottom: 30px; /* Add space between post content and buttons */
 }
 
-.post-actions button {
+.post-actions a {
     padding: 10px 20px; /* Adjust padding as needed */
     background-color: #007bff; /* Blue color for buttons */
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    height: 40px; /* Adjust height as needed */
-    width: 100px; /* Adjust width as needed */
+    height: 20px; /* Adjust height as needed */
+    width: 30px; /* Adjust width as needed */
 }
 
 .post-actions button:hover {

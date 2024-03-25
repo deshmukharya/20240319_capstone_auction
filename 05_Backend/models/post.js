@@ -28,14 +28,11 @@ const postSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
-      startDate: {
-        type: String,
-        required: true,
-    },
-    startTime: {
-        type: String,
-        required: true,
-    },
+      startDateTime: 
+      { type: Date, 
+        default: Date.now, 
+        required: true },
+        
     duration :{
         type:Number,
         required:true

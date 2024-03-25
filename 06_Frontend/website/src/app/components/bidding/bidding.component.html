@@ -1,0 +1,55 @@
+
+<header class="header_section">
+    <div class="container1">
+        <div class="header_content">
+            <div class="logo">
+                <h1 class="site_name">SocioAuction</h1>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Items</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <table class="blue-table">
+        <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Start Date Time</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let post of auctionData">
+              <td>
+                <img [src]="post.image" alt="Product Image" class="product-image">
+              </td>
+              <td>{{ post.name }}</td>
+              <td>{{ post.category }}</td>
+              <td>{{ post.price }}</td>
+              <td>{{ post.startDateTime | date: 'medium' }}</td>
+              <td>{{ post.duration }}</td>
+            </tr>
+          </tbody>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Price</th>
+          <th>Timer</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+  </div>
