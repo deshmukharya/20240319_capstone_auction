@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingpageComponent } from './pages/landingpage/landingpage.component';
-import { BiddingComponent } from './components/bidding/bidding.component';
-import { AllpostsComponent } from './components/allposts/allposts.component';
-
-
-
+import {NotFoundComponent} from './core/not-found/not-found.component';
 const routes: Routes = [
-  { path: '', component: LandingpageComponent },
-  { path: 'bid', component: BiddingComponent },
-  { path: 'posts', component: AllpostsComponent },
+  {path: '', redirectTo: 'product/latest', pathMatch: 'full'},
+  {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+  {path: 'product', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)},
+  {path: '**', component: NotFoundComponent}
 ]
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

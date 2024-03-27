@@ -1,0 +1,19 @@
+<section class="slider_section">
+  <div class="slider_container">
+      <div class="slide">
+          <img src="../../../assets/hero-bg.jpg"  class="image">
+          <div class="slide_content">
+              <h1>A SocioAuction Platform</h1>
+          <h2>Future of Marketing</h2>
+          <br><br>
+          </div>
+      </div>
+  </div>
+</section>
+<div>
+  <h2>Latest products</h2>
+  <app-loader [isActive]="!products"></app-loader>
+  <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+  <p *ngIf="isProductsEmpty">No products yet</p>
+</div>
+

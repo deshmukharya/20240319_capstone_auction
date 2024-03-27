@@ -1,0 +1,16 @@
+
+<div class="login-box">
+  <div class="title-bar">
+    <h2>Login</h2>
+  </div>
+  <div id="login">
+    <p *ngIf="showServerErrorMessage">{{errorMessage}}</p>
+    <div *ngIf="!showServerErrorMessage">
+      <p *ngIf="email.invalid">Email is invalid</p>
+      <p *ngIf="password.invalid">Password must be at least 8 chars</p>
+    </div>
+    <input type="text" class="form-control my-form" name="email" placeholder="Email" [formControl]="email"/>
+    <input type="password" class="form-control my-form" name="password" placeholder="Password" [formControl]="password"/>
+    <button type="button" class="btn btn-primary" id="login-button" style="background-color:rgb(36, 101, 108)"(click)="login()">Login</button>
+  </div>
+</div>
