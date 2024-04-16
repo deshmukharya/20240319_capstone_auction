@@ -1,163 +1,171 @@
-const jwt = require("jsonwebtoken");
-const Post = require("../models/post");
-const { verifyToken } = require("../middleware/auth");
+const fs = require('fs');
+const path = require('path');
+const formidable = require('formidable');
+const Product = require('../models/product');
+const Bid = require('../models/bid');
+const Comment = require('../models/comment');
+const { getUserId } = require('../auth');
+const { latestProductCount } = require('../config');
 
-const createPost = async (req, res) => {
-    try {
-        // Validate request body
-        const { name, category, image, price, startDateTime, duration } = req.body;
-        if (!name || !category || !image || !price || !startDateTime|| !duration) {
-          return res.status(400).json({ success: false, message: "Missing required fields" });
-        }
-    
-        // Verify token from request headers
-    
-        // Create a new Post document with the provided data
-        const newPost = new Post({
-          name,
-          category,
-          image,
-          price,
-          startDateTime,
-          duration
-        });
-    
-        // Save the post
-        const savedPost = await newPost.save();
-    
-        res.status(201).json({ success: true, message: "Post created successfully", post: savedPost });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+async function createProduct(req, res, next) {
+  try {
+    const form = formidable({ multiples: true });
+
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        throw new Error(err.message);
       }
+
+      const { image } = files;
+
+      const product = {
+        title: fields.title,
+        description: fields.description,
+        endTime: fields.endTime,
+        startPrice: fields.startPrice,
+        creator: getUserId(req)
+      };
+
+      const newProduct = await Product.create(product);
+
+      const newPath = path.resolve('public/images', `${newProduct._id.toString()}.png`);
+      fs.rename(image.path, newPath, (err) => {
+        if (err) {
+          throw new Error(err.message);
+        }
+      });
+
+      res.json(newProduct);
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteProduct(req, res, next) {
+  try {
+    const id = req.productId;
+    await Product.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function editProduct(req, res, next) {
+  try {
+    const id = req.productId;
+    const { title = '', description = '' } = req.body;
+    const product = await Product.findByIdAndUpdate(id, { $set: { title, description } }, { new: true });
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function latest(req, res, next) {
+  try {
+    const products = await Product.find().sort({ createTime: -1 }).limit(latestProductCount);
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function allProducts(req, res, next) {
+  try {
+    const { skip, take, sort = 0 } = req.query;
+    const sortMapping = [{ likes: -1 }, { createTime: -1 }];
+    const products = await Product.find({}).sort(sortMapping[sort]).skip(Number(skip)).limit(Number(take));
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function details(req, res, next) {
+  try {
+    const product = req.product.toObject();
+    const isOwner = product.creator._id.toString() === getUserId(req);
+    product.isOwner = isOwner;
+    product.bids = [];
+    const bids = await Bid.find({ product: product._id.toString() }).sort({ priceValue: -1 }).populate('creator', ['-password', '-__v']);
+    product.priceValue = (bids[0] || {}).priceValue;
+    if (isOwner) {
+      product.bids = bids;
     }
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+}
 
-    const getAllPosts = async (req, res) => {
-        try {
-          // Retrieve all posts from the database
-          const posts = await Post.find();
-      
-          res.status(200).json({ success: true, message: "Posts retrieved successfully", posts });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal Server Error" });
-        }
-      };
-
-
-      const getPostById = async (req, res) => {
-        try {
-          const postId = req.query.id; // Retrieve postId from query parameters
-      
-          if (!postId) {
-            return res.status(400).json({ success: false, message: "Post ID is required" });
-          }
-      
-          // Retrieve the post from the database by its ID
-          const post = await Post.findById(postId);
-      
-          if (!post) {
-            return res.status(404).json({ success: false, message: "Post not found" });
-          }
-      
-          res.status(200).json({ success: true, message: "Post retrieved successfully", post });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal Server Error" });
-        }
-      }; 
-      const addLike = async (req, res) => {
-        try {
-          // Extract post ID from query parameters
-          const postId = req.query.postId;
-      
-          // Validate post ID
-          if (!postId) {
-            return res.status(400).json({ success: false, message: "Post ID is required" });
-          }
-      
-          // Find the post by its ID
-          const post = await Post.findById(postId);
-      
-          // Check if the post exists
-          if (!post) {
-            return res.status(404).json({ success: false, message: "Post not found" });
-          }
-      
-          // Increment the likes count
-          post.likes += 1;
-      
-          // Save the updated post
-          const updatedPost = await post.save();
-      
-          res.status(200).json({ success: true, message: "Like added successfully", post: updatedPost });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal Server Error" });
-        }
-      };
-
-      const getLikes = async (req, res) => {
-        try {
-          // Extract post ID from query parameters
-          const postId = req.query.postId;
-      
-          // Validate post ID
-          if (!postId) {
-            return res.status(400).json({ success: false, message: "Post ID is required" });
-          }
-      
-          // Find the post by its ID
-          const post = await Post.findById(postId);
-      
-          // Check if the post exists
-          if (!post) {
-            return res.status(404).json({ success: false, message: "Post not found" });
-          }
-      
-          res.status(200).json({ success: true, likes: post.likes });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal Server Error" });
-        }
-      };
-
-    const deletePost = async (req, res) => {
-    try {
-        // Extract token from request headers
-        const token = req.headers.authorization;
-        if (!token) {
-            return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
-        }
-        // Verify and decode the token
-        const extractedToken = token.replace('Bearer ', '');
-        const decoded = jwt.verify(extractedToken, process.env.JWT_SECRET);
-
-        // Extract postId from query parameters
-        const postId = req.query.postId;
-
-        // Find the post by its ID and delete it
-        const deletedPost = await Post.findByIdAndDelete(postId);
-
-        // If the post is not found, return 404 Not Found
-        if (!deletedPost) {
-            return res.status(404).json({ success: false, message: 'Post not found' });
-        }
-
-        // Return success message upon successful deletion
-        res.json({ success: true, message: 'Post deleted successfully', deletedPost });
-    } catch (error) {
-        // Return 500 Internal Server Error if any error occurs
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+async function addBid(req, res, next) {
+  try {
+    const productId = req.productId;
+    const bid = await Bid.findOne({ product: productId.toString() }).sort({ priceValue: -1 });
+    const latestPriceValue = bid ? bid.priceValue : req.product.startPrice;
+    if (req.body.priceValue <= latestPriceValue) {
+      throw new Error('bid priceValue must be larger than current product price');
     }
+    const newBid = await Bid.create({
+      priceValue: Number(req.body.priceValue),
+      creator: getUserId(req),
+      product: productId
+    });
+    res.json(newBid);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getProductsCount(req, res, next) {
+  try {
+    const count = await Product.countDocuments({});
+    res.json({ count });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function createComment(req, res, next) {
+  try {
+    const { product } = req;
+    const { comment } = req.body;
+    const newComment = await Comment.create({ body: comment, creator: getUserId(req) });
+    product.comments.push(newComment._id);
+    await product.save();
+    res.json(newComment);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function like(req, res, next) {
+  try {
+    const { product } = req;
+    if (product.likes.includes(getUserId(req))) {
+      throw new Error('user already liked');
+    }
+    product.likes.push(getUserId(req));
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  createProduct,
+  deleteProduct,
+  editProduct,
+  latest,
+  allProducts,
+  details,
+  addBid,
+  getProductsCount,
+  createComment,
+  like
 };
 
-
-
-
-// Save file to server storage
-
-
-module.exports = { createPost,getAllPosts,getPostById,addLike,getLikes,deletePost };
 

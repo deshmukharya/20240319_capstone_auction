@@ -1,108 +1,93 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-// Import middleware
-const { verifyToken } = require("../middleware/auth");  
-const User = require("../models/user");
-const {
-    validateEmail,
-    validatePassword,
-    validateUser, 
-  } = require("../validators/userValidators");
+const User = require('../models/user');
+const TokenBlacklist = require('../models/tokenBlacklist');
+const auth = require('../auth');
+const { authCookie } = require('../config');
+const Product = require('../models/product');
+const Bid = require('../models/bid');
 
-// Registration function
-const register = async (req, res) => {
-    try {
-      // Validate request body
-      validateUser(req.body);
-  
-      const { username, email, password } = req.body;
-      
-  
-      // Check if the email is already in use
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.status(409).json({
-          error: "Email is already in use.",
-        });
-      }
-  
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Create a new User document with provided user details
-      const newUser = new User({
-        username,
-        email,
-        password: hashedPassword,
-      });
-  
-      // Save the new User document to the database
-      const savedUser = await newUser.save();
-  
-      res.status(201).json(savedUser);
-    } catch (error) {
-      console.error(error);
-  
-      // Check if the error is a validation error
-      if (
-        error.name === "ValidationError" ||
-        error.message.startsWith("ValidationError")
-      ) {
-        return res.status(400).json({ error: error.message });
-      }
-  
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  };
-  
-  // POST endpoint for user login
-  const login = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-  
-      // Validation
-      try {
-        validateEmail(email); // Validate email
-        validatePassword(password); // Validate password
-      } catch (error) {
-        return res.status(400).json({ error: error.message });
-      }
-  
-      // Find user by email
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(401).json({
-          error: "Invalid email or password.",
-        });
-      }
-  
-      // Compare password
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({
-          error: "Invalid email or password.",
-        });
-      }
-      // Generate JWT token
-      const token = jwt.sign(
-        { email: user.email, role: user.role},
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" } // Token expires in 1 hour
-      );
-  
-      res.status(200).json({
-        message: "Login successful.",
-        token: token,
-        role:user.role,
-        userId:user._id, 
-        expiresIn: 3600, // Token expires in 1 Month
-      });
-      console.log("success");
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  };
+async function login(req, res, next) {
+  try {
+    const { email, password } = req.body;
 
-  
-module.exports = { register,login };
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error('invalid username or password');
+    }
+
+    const match = await user.matchPassword(password);
+
+    if (!match) {
+      throw new Error('invalid username or password');
+    }
+
+    res.cookie('auth-cookie', auth.generateAuthToken(user._id));
+    res.json({ _id: user._id, email: user.email });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function register(req, res, next) {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.create({ email, password });
+
+    res.json({ _id: user._id, email: user.email });
+  } catch (error) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      return res.status(422).send({ errors: ['User already exists'] });
+    }
+    next(error);
+  }
+}
+
+async function logout(req, res, next) {
+  try {
+    const token = req.cookies[authCookie];
+    await TokenBlacklist.create({ token });
+
+    res.clearCookie('auth-cookie').json({ logout: true });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function profile(req, res, next) {
+  try {
+    const { userId = null } = req.params;
+    const result = { user: {} };
+
+    const creator = { creator: userId || req.user._id };
+    const userPromise = userId ? User.findById(userId) : Promise.resolve(req.user);
+
+    const [bids, products, user] = await Promise.all([
+      Bid.find(creator).populate('product').sort({ priceValue: -1 }),
+      Product.find(creator),
+      userPromise
+    ]);
+
+    result.products = await Promise.all(products.map(async (product) => {
+      const latestBid = await Bid.findOne({ product: product.id }).sort({ priceValue: -1 });
+      const priceValue = latestBid ? latestBid.priceValue : product.startPrice;
+      return { ...product._doc, priceValue };
+    }));
+
+    result.bids = bids;
+    result.user.email = user.email;
+    result.user._id = user._id;
+    result.isUserProfile = userId === null;
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  login,
+  register,
+  logout,
+  profile
+};

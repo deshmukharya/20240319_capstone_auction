@@ -1,4 +1,12 @@
 const mongoose = require("mongoose");
-mongoose.connect(
-    "mongodb+srv://arya:root@cluster0.0fngkkn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+const url = process.env.MONGO_URL;
+
+//Connecting Database
+mongoose
+  .connect(url)
+  .then(() => {
+    console.log(" Mongo Database is Connected Sucessfully.");
+  })
+  .catch((err) => {
+    console.log(" Mongo Database is Not Connected ERROR:-" + err);
+  });
